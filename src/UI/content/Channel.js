@@ -11,8 +11,9 @@ import UserMessage from "../components/UserMessage";
 import Footer from "../components/Footer";
 import {messageNormalized} from "../../core/utils/formatingUtils";
 
-const INPUT_DEBOUNCE_MILLISECONDS = 10000;
-var doJob;
+const INPUT_DEBOUNCE_MILLISECONDS = 5000;
+
+var updateData;
 
 class Channel extends Component {
 
@@ -23,27 +24,24 @@ class Channel extends Component {
   constructor(props, context) {
     super(props, context);
 
-    // this.debouncedAddToTaskPopulate = _.debounce(this.writeMessage, INPUT_DEBOUNCE_MILLISECONDS);
-    // this.writeMessage1 = _.debounce(this.writeMessage, INPUT_DEBOUNCE_MILLISECONDS)
-    doJob = _.debounce(this.writeMessage, INPUT_DEBOUNCE_MILLISECONDS);
-    // this.writeMessage = _.bind(this.writeMessage, this);
-
-    // const a = _.debounce(this.writeMessage, INPUT_DEBOUNCE_MILLISECONDS);
+    updateData = _.debounce(this.doDataUpdate, INPUT_DEBOUNCE_MILLISECONDS);
   }
 
 
-  writeMessage(text) {
-    alert(text)
+  doDataUpdate(text) {
+    console.log(text)
   }
 
   componentWillMount() {
     const {
       channel,
-      doFetchJournalById
+      doFetchJournalById,
+      doFetchJournalChannels
     } = this.props;
 
-    doJob("pewra");
+    updateData("Test");
     doFetchJournalById(channel);
+    doFetchJournalChannels();
   }
 
   componentDidMount(){
@@ -51,8 +49,7 @@ class Channel extends Component {
   }
 
   componentWillUnmount(){
-    console.log("UNMOUNT")
-    doJob.cancel();
+    updateData.cancel();
   }
 
   fetchUserChannelTitle(){
@@ -126,12 +123,15 @@ class Channel extends Component {
       im_resourceMessages,
       populateMessages,
       populateAllUsers,
-      im_resourceData
+      populateData
     } = this.props;
 
     let jsxData = null;
 
-    if (populateMessages && populateAllUsers && im_resourceData) {
+    if (populateMessages &&
+        populateAllUsers &&
+        populateData
+    ) {
       jsxData = this.makeJsx(im_resourceMessages);
     }
     else {
@@ -155,7 +155,7 @@ function mapStateToProps(im_state, props) {
 
   const populateMessages = im_state.populateReducer.getIn([CHANNEL_MESSAGES+"_"+channel]);
   const populateAllUsers = im_state.populateReducer.getIn([ALL_USERS]);
-
+  const populateData = im_state.populateReducer.get(LOAD_ALL_CHANNELS);
 
   return {
     im_resourceMessages,
@@ -163,13 +163,15 @@ function mapStateToProps(im_state, props) {
     im_resourceData,
     channel,
     populateMessages,
-    populateAllUsers
+    populateAllUsers,
+    populateData
   };
 };
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    doFetchJournalById
+    doFetchJournalById,
+    doFetchJournalChannels
   }, dispatch);
 }
 

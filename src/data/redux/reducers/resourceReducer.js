@@ -65,7 +65,6 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
     case "LOAD_MESSAGES": {
       const im_resourceState = fromJS(action.payload.messages);
       const channelId = action.channelId;
-      console.log("Channel ID "+channelId)
       if (!!im_resourceState && !im_resourceState.isEmpty()) {
         im_newState = im_newState.setIn([populateKey], new List())
         im_resourceState.forEach((im_resources, resourceName) => {
