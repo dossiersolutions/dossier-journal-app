@@ -13,23 +13,27 @@ import {messageNormalized} from "../../core/utils/formatingUtils";
 
 const INPUT_DEBOUNCE_MILLISECONDS = 5000;
 
-var updateData;
-
 class Channel extends Component {
 
   img = {
     width: "90px"
   }
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
-    updateData = _.debounce(this.doDataUpdate, INPUT_DEBOUNCE_MILLISECONDS);
+    this.state ={
+      timerId : null
+    }
   }
 
 
-  doDataUpdate(text) {
-    console.log(text)
+  doDataUpdate(channel) {
+    const {
+      doFetchJournalById,
+    } = this.props;
+
+    doFetchJournalById(channel);
   }
 
   componentWillMount() {
@@ -39,9 +43,10 @@ class Channel extends Component {
       doFetchJournalChannels
     } = this.props;
 
-    updateData("Test");
+    this.state.timerId = setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
+
     doFetchJournalById(channel);
-    doFetchJournalChannels();
+    // doFetchJournalChannels();
   }
 
   componentDidMount(){
@@ -49,7 +54,7 @@ class Channel extends Component {
   }
 
   componentWillUnmount(){
-    updateData.cancel();
+    clearInterval(this.state.timerId);
   }
 
   fetchUserChannelTitle(){

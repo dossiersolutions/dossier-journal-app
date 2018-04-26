@@ -19,11 +19,32 @@ import UserProfile from "../components/UserProfile";
 import {dateSelector} from "../../core/utils/dateUtils";
 import {sortByDate} from "../../core/utils/formatingUtils";
 
+const INPUT_DEBOUNCE_MILLISECONDS = 5000;
+
 class Home extends Component {
 
   deck_style={
     paddingLeft: "10px",
     paddingRight: "10px"
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state ={
+      timerId : null
+    }
+  }
+
+  doDataUpdate() {
+    const {
+      doFetchJournalChannels,
+      doFetchAllUsers,
+      getEmoji,
+    } = this.props;
+
+    console.log("Test")
+      // doFetchJournalChannels(LOAD_ALL_CHANNELS);
   }
 
   componentWillMount() {
@@ -34,6 +55,8 @@ class Home extends Component {
         populateData
       } = this.props;
 
+    this.state.timerId = setInterval(() => this.doDataUpdate(), INPUT_DEBOUNCE_MILLISECONDS)
+
     if(!populateData){
         doFetchJournalChannels(LOAD_ALL_CHANNELS);
         doFetchAllUsers();
@@ -43,6 +66,10 @@ class Home extends Component {
 
   componentDidMount(){
     window.scrollTo(0, 0)
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.state.timerId);
   }
 
   nextPath(path) {
