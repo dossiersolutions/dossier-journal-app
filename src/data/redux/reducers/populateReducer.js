@@ -1,10 +1,20 @@
 import {fromJS, List, Map} from "immutable";
+import {
+  TYPE_GET_ALL_EMOJI,
+  TYPE_GET_ALL_USERS,
+  TYPE_LOAD_MESSAGES,
+  TYPE_RESET_STATE,
+  TYPE_UPDATE_CHANNELS,
+  TYPE_UPDATE_LAST_MESSAGE,
+  TYPE_UPDATE_USER,
+  TYPE_USER_AUTHENTIFICATION
+} from "../actions/./populateActions";
 
 const populateReducer = (state = new Map(), action = {}) => {
   const populateKey = action.populateKey;
 
   switch (action.type) {
-    case "UPDATE_CHANNELS": {
+    case TYPE_UPDATE_CHANNELS: {
 
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
@@ -32,7 +42,7 @@ const populateReducer = (state = new Map(), action = {}) => {
       break;
     }
 
-    case "UPDATE_LAST_MESSAGE": {
+    case TYPE_UPDATE_LAST_MESSAGE: {
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
         return state;
@@ -60,7 +70,7 @@ const populateReducer = (state = new Map(), action = {}) => {
         }
     }
 
-    case "UPDATE_USER": {
+    case TYPE_UPDATE_USER: {
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
         return state;
@@ -88,7 +98,7 @@ const populateReducer = (state = new Map(), action = {}) => {
       }
     }
 
-    case "LOAD_MESSAGES": {
+    case TYPE_LOAD_MESSAGES: {
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
         return state;
@@ -116,7 +126,7 @@ const populateReducer = (state = new Map(), action = {}) => {
       break;
     }
 
-    case "USER_AUTHENTIFICATION": {
+    case TYPE_USER_AUTHENTIFICATION: {
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
         return state;
@@ -126,7 +136,7 @@ const populateReducer = (state = new Map(), action = {}) => {
       return state;
     }
 
-    case "GET_ALL_USERS": {
+    case TYPE_GET_ALL_USERS: {
 
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
@@ -155,7 +165,7 @@ const populateReducer = (state = new Map(), action = {}) => {
       break;
     }
 
-    case "GET_ALL_EMOJI": {
+    case TYPE_GET_ALL_EMOJI: {
       // Skip meta state update if the populateKey is missing (meaning only the resourceState will be updated)
       if (!populateKey) {
         return state;
@@ -174,6 +184,11 @@ const populateReducer = (state = new Map(), action = {}) => {
           ids: new Map()
         }));
       }
+    }
+
+    case TYPE_RESET_STATE: {
+      state = state.clear();
+      return state;
     }
 
     default:

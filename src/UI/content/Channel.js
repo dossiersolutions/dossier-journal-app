@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {doFetchJournalById, doFetchJournalChannels, doFetchAllUsers} from "../../data/redux/actions/resourceActions";
+import {doFetchAllUsers, doFetchJournalById, doFetchJournalChannels, getEmoji} from "../../data/redux/actions/resourceActions";
 import {bindActionCreators} from "redux";
-import _ from "lodash";
+import {KEY_GET_ALL_USERS, KEY_LOAD_MESSAGES, KEY_UPDATE_CHANNELS, KEY_GET_ALL_EMOJI} from "../../data/redux/actions/constants";
 import {connect} from 'react-redux';
-import {ALL_USERS, CHANNEL_MESSAGES, LOAD_ALL_CHANNELS} from "../../data/redux/actions/constants";
 import JournalHeaderLoading from "../placeholders/PageLoader";
 import Header from "../components/Header";
 import logo from "../../media/images/dossier-logo.jpg";
@@ -11,7 +10,7 @@ import UserMessage from "../components/UserMessage";
 import Footer from "../components/Footer";
 import {messageNormalized} from "../../core/utils/formatingUtils";
 
-const INPUT_DEBOUNCE_MILLISECONDS = 5000;
+const INPUT_DEBOUNCE_MILLISECONDS = 180000;
 
 class Channel extends Component {
 
@@ -27,6 +26,29 @@ class Channel extends Component {
     }
   }
 
+  componentWillMount() {
+    const {
+      channel,
+      doFetchJournalById,
+      doFetchJournalChannels,
+      populateAllUsers,
+      populateData,
+      doFetchAllUsers,
+      populateEmoji,
+      getEmoji
+    } = this.props;
+
+    this.setState({
+      timerId: setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
+    });
+
+    doFetchJournalById(channel);
+    if(!populateData && !populateAllUsers && !populateEmoji){
+      doFetchJournalChannels();
+      doFetchAllUsers();
+      getEmoji();
+    }
+  }
 
   doDataUpdate(channel) {
     const {
@@ -34,19 +56,6 @@ class Channel extends Component {
     } = this.props;
 
     doFetchJournalById(channel);
-  }
-
-  componentWillMount() {
-    const {
-      channel,
-      doFetchJournalById,
-      doFetchJournalChannels
-    } = this.props;
-
-    this.state.timerId = setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
-
-    doFetchJournalById(channel);
-    // doFetchJournalChannels();
   }
 
   componentDidMount(){
@@ -77,20 +86,37 @@ class Channel extends Component {
 
   setEmoji(text){
 
-  const link = "https://dossiersolutions.slack.com/emoji/bowtie/46ec6f2bb0.png";
+    const {
+      populateEmoji,
+      im_resourcesEmoji,
+      im_resourcesUsers
+    } = this.props;
 
-  text = text.split(" ");
+    const link = "https://dossiersolutions.slack.com/emoji/bowtie/46ec6f2bb0.png";
 
-  for (var i = 1; i < text.length; i++) {
-    if(text[i] === ":slightly_smiling_face:"){
-      text[i] = <span key={i}><img width="20px" className="rounded" src={link} alt="user_photo"/> </span>;
-    }else{
-      text[i] = <span key={i}>{text[i]+" "}</span>;
+    console.log(JSON.stringify(im_resourcesEmoji, null, 2))
+    text = text.split(" ");
+
+      // console.log("SIZE "+im_resourcesEmoji.has("au2"));
+      // if(text.includes(":"+"au2"+":")){
+      //   alert("MSG")
+      //   text = text+"_____-_____________"
+      //   console.log(text)
+      // }
+
+
+    for (var i = 0; i < text.length; i++) {
+      if(im_resourcesEmoji.has(":"+text[i]+":")){
+        console.log(text[i]);
+        const link = im_resourcesEmoji.getIn([":"+text[i]+":", text[i]]);
+        console.log(link);
+        text[i] = <span key={i}><img width="20px" className="rounded" src={link} alt="user_photo"/> </span>;
+      }else{
+        text[i] = <span key={i}>{text[i]+" "}</span>;
+      }
     }
+    return text;
   }
-  return text;
-  }
-
 
   makeJsx() {
     const {
@@ -128,14 +154,16 @@ class Channel extends Component {
       im_resourceMessages,
       populateMessages,
       populateAllUsers,
-      populateData
+      populateData,
+      populateEmoji
     } = this.props;
 
     let jsxData = null;
 
     if (populateMessages &&
         populateAllUsers &&
-        populateData
+        populateData &&
+        populateEmoji
     ) {
       jsxData = this.makeJsx(im_resourceMessages);
     }
@@ -154,13 +182,16 @@ class Channel extends Component {
 function mapStateToProps(im_state, props) {
   const channel = props.match.params.channelId;
 
-  const im_resourceMessages = im_state.resourceReducer.get(CHANNEL_MESSAGES+"_"+channel);
-  const im_resourcesUsers = im_state.resourceReducer.get(ALL_USERS);
-  const im_resourceData = im_state.resourceReducer.get(LOAD_ALL_CHANNELS);
+  const im_resourceMessages = im_state.resourceReducer.get(KEY_LOAD_MESSAGES+"_"+channel);
+  const im_resourcesUsers = im_state.resourceReducer.get(KEY_GET_ALL_USERS);
+  const im_resourceData = im_state.resourceReducer.get(KEY_UPDATE_CHANNELS);
+  const im_resourcesEmoji = im_state.resourceReducer.get(KEY_GET_ALL_EMOJI);
 
-  const populateMessages = im_state.populateReducer.getIn([CHANNEL_MESSAGES+"_"+channel]);
-  const populateAllUsers = im_state.populateReducer.getIn([ALL_USERS]);
-  const populateData = im_state.populateReducer.get(LOAD_ALL_CHANNELS);
+  const populateMessages = im_state.populateReducer.getIn([KEY_LOAD_MESSAGES+"_"+channel]);
+  const populateAllUsers = im_state.populateReducer.getIn([KEY_GET_ALL_USERS]);
+  const populateData = im_state.populateReducer.get(KEY_UPDATE_CHANNELS);
+  const populateEmoji = im_state.populateReducer.get(KEY_GET_ALL_EMOJI);
+
 
   return {
     im_resourceMessages,
@@ -169,14 +200,18 @@ function mapStateToProps(im_state, props) {
     channel,
     populateMessages,
     populateAllUsers,
-    populateData
+    populateData,
+    populateEmoji,
+    im_resourcesEmoji
   };
 };
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     doFetchJournalById,
-    doFetchJournalChannels
+    doFetchJournalChannels,
+    doFetchAllUsers,
+    getEmoji
   }, dispatch);
 }
 

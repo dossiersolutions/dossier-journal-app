@@ -1,15 +1,20 @@
 import React, {Component} from 'react';
-import {doFetchJournalChannels, doFetchAllUsers, getEmoji} from "../../data/redux/actions/resourceActions";
-import {bindActionCreators} from "redux";
-import {connect} from 'react-redux';
 import {
-  ALL_USERS,
-  EMOJI,
-  LOAD_ALL_CHANNELS,
-  LOAD_ALL_LAST_MESSAGES,
-  LOAD_ALL_USERS,
-  DAT
-} from "../../data/redux/actions/constants"
+  doFetchAllUsers,
+  doFetchJournalChannels,
+  doResetState,
+  getEmoji
+} from "../../data/redux/actions/resourceActions";
+import {bindActionCreators} from "redux"
+import {
+  KEY_GET_ALL_EMOJI,
+  KEY_GET_ALL_USERS,
+  KEY_UPDATE_CHANNELS,
+  KEY_UPDATE_LAST_MESSAGE,
+  KEY_UPDATE_USER
+} from "../../data/redux/actions/constants";
+import {connect} from 'react-redux';
+
 import {CardDeck} from 'reactstrap';
 import Header from "../components/Header";
 import JournalHeaderLoading from "../placeholders/PageLoader";
@@ -19,11 +24,11 @@ import UserProfile from "../components/UserProfile";
 import {dateSelector} from "../../core/utils/dateUtils";
 import {sortByDate} from "../../core/utils/formatingUtils";
 
-const INPUT_DEBOUNCE_MILLISECONDS = 5000;
+const INPUT_DEBOUNCE_MILLISECONDS = 300000;
 
 class Home extends Component {
 
-  deck_style={
+  deck_style = {
     paddingLeft: "10px",
     paddingRight: "10px"
   }
@@ -31,8 +36,31 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state ={
-      timerId : null
+    this.state = {
+      timerId: null
+    }
+  }
+
+  componentWillMount() {
+    const {
+      doFetchJournalChannels,
+      doFetchAllUsers,
+      getEmoji,
+      populateAllEmoji,
+      populateData,
+      doResetState
+    } = this.props;
+
+    this.setState({
+      timerId: setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
+    });
+
+
+    if(!populateData || !populateAllEmoji){
+      doResetState();
+      doFetchJournalChannels();
+      doFetchAllUsers();
+      getEmoji();
     }
   }
 
@@ -41,34 +69,20 @@ class Home extends Component {
       doFetchJournalChannels,
       doFetchAllUsers,
       getEmoji,
+      doResetState
     } = this.props;
 
-    console.log("Test")
-      // doFetchJournalChannels(LOAD_ALL_CHANNELS);
+    doResetState();
+    doFetchJournalChannels();
+    doFetchAllUsers();
+    getEmoji();
   }
 
-  componentWillMount() {
-      const {
-        doFetchJournalChannels,
-        doFetchAllUsers,
-        getEmoji,
-        populateData
-      } = this.props;
-
-    this.state.timerId = setInterval(() => this.doDataUpdate(), INPUT_DEBOUNCE_MILLISECONDS)
-
-    if(!populateData){
-        doFetchJournalChannels(LOAD_ALL_CHANNELS);
-        doFetchAllUsers();
-        getEmoji();
-      }
+  componentDidMount() {
+    window.scrollTo(0, 0);
   }
 
-  componentDidMount(){
-    window.scrollTo(0, 0)
-  }
-
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearInterval(this.state.timerId);
   }
 
@@ -76,7 +90,7 @@ class Home extends Component {
     this.props.history.push(path);
   }
 
-  onClickHandler (channelId){
+  onClickHandler(channelId) {
     this.nextPath("channel/" + channelId);
   }
 
@@ -129,12 +143,10 @@ class Home extends Component {
       populateDataUsers,
       populateAllUsers,
       populateAllEmoji,
-      populateData
+      populateData,
     } = this.props;
 
     let jsxData = null;
-    // console.log(JSON.stringify(populateData, null, null))
-
 
     if (
         populateData &&
@@ -147,7 +159,6 @@ class Home extends Component {
         populateAllEmoji
     ) {
       jsxData = this.makeProfiles(im_resourceData);
-      // console.log(this.state)
     }
     else {
       jsxData = <JournalHeaderLoading/>
@@ -163,20 +174,18 @@ class Home extends Component {
 
 const mapStateToProps = state => {
 
-  const im_resourceData = state.resourceReducer.get(LOAD_ALL_CHANNELS);
-  const im_resourcesUsers = state.resourceReducer.get(ALL_USERS);
-  const im_resourcesEmoji = state.resourceReducer.get(EMOJI);
+  const im_resourceData = state.resourceReducer.get(KEY_UPDATE_CHANNELS);
+  const im_resourcesUsers = state.resourceReducer.get(KEY_GET_ALL_USERS);
+  const im_resourcesEmoji = state.resourceReducer.get(KEY_GET_ALL_EMOJI);
 
-  const populateData = state.populateReducer.get(LOAD_ALL_CHANNELS);
-  const totalCount = state.populateReducer.getIn([LOAD_ALL_CHANNELS, "totalCount"]);
-  const populateDataMessages = state.populateReducer.getIn([LOAD_ALL_LAST_MESSAGES, "messages"]);
-  const populateDataUsers = state.populateReducer.getIn([LOAD_ALL_USERS, "users"]);
-  const populateAllUsers = state.populateReducer.get(ALL_USERS);
-  const populateAllEmoji = state.populateReducer.get(EMOJI);
+  const populateData = state.populateReducer.get(KEY_UPDATE_CHANNELS);
+  const totalCount = state.populateReducer.getIn([KEY_UPDATE_CHANNELS, "totalCount"]);
+  const populateDataMessages = state.populateReducer.getIn([KEY_UPDATE_LAST_MESSAGE, "messages"]);
+  const populateDataUsers = state.populateReducer.getIn([KEY_UPDATE_USER, "users"]);
+  const populateAllUsers = state.populateReducer.get(KEY_GET_ALL_USERS);
+  const populateAllEmoji = state.populateReducer.get(KEY_GET_ALL_EMOJI);
 
   // console.log("TOATL COUNT "+JSON.stringify(populateDataMessages, null, 2))
-  // console.log("This state "+JSON.stringify(state, null, 2));
-
 
   return {
     im_resourceData,
@@ -195,7 +204,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     doFetchJournalChannels,
     doFetchAllUsers,
-    getEmoji
+    getEmoji,
+    doResetState
   }, dispatch);
 }
 

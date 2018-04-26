@@ -1,12 +1,21 @@
 import {fromJS, Iterable, List, Map} from "immutable";
 import _ from "lodash";
+import {
+  TYPE_GET_ALL_EMOJI,
+  TYPE_GET_ALL_USERS,
+  TYPE_LOAD_MESSAGES,
+  TYPE_RESET_STATE,
+  TYPE_UPDATE_CHANNELS,
+  TYPE_UPDATE_LAST_MESSAGE,
+  TYPE_UPDATE_USER
+} from "../actions/./populateActions";
 
 const resourceReducer = (im_state = new Map(), action = {}) => {
   const populateKey = action.populateKey;
   let im_newState = im_state;
 
   switch (action.type) {
-    case "UPDATE_CHANNELS": {
+    case TYPE_UPDATE_CHANNELS: {
       const im_resourceState = fromJS(action.payload);
         if (!!im_resourceState && !im_resourceState.isEmpty()) {
           im_newState = im_newState.setIn([populateKey], new List())
@@ -17,11 +26,10 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
           });
         }
 
-      im_newState = im_newState.set("$version", _.uniqueId());
       break;
     }
 
-    case "UPDATE_LAST_MESSAGE": {
+    case TYPE_UPDATE_LAST_MESSAGE: {
       const im_lastMessage = fromJS(action.payload.messages);
       if (!!im_lastMessage && !im_lastMessage.isEmpty()) {
 
@@ -43,7 +51,7 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
       break;
     }
 
-    case "UPDATE_USER": {
+    case TYPE_UPDATE_USER: {
       const im_user = fromJS(action.payload.user);
       if (!!im_user && !im_user.isEmpty()) {
         const index = im_newState.get("loadAllChannels").findIndex(item => item.get("creator") === im_user.get("id"));
@@ -62,7 +70,7 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
       break;
     }
 
-    case "LOAD_MESSAGES": {
+    case TYPE_LOAD_MESSAGES: {
       const im_resourceState = fromJS(action.payload.messages);
       const channelId = action.channelId;
       if (!!im_resourceState && !im_resourceState.isEmpty()) {
@@ -74,11 +82,10 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
         });
       }
 
-      im_newState = im_newState.set("$version", _.uniqueId());
       break;
     }
 
-    case "GET_ALL_USERS": {
+    case TYPE_GET_ALL_USERS: {
       const im_resourceState = fromJS(action.payload.members);
       if (!!im_resourceState && !im_resourceState.isEmpty()) {
         im_newState = im_newState.setIn([populateKey], new Map())
@@ -92,22 +99,39 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
       break;
     }
 
-    case "GET_ALL_EMOJI": {
+    case TYPE_GET_ALL_EMOJI: {
+
       const im_resourceState = fromJS(action.payload.emoji);
-      if (!im_resourceState.isEmpty()) {
-        im_newState = im_newState.mergeIn([populateKey], new Map({
-          totalCount: im_resourceState.size,
-          ids: im_resourceState
-        }));
-        return im_newState;
+      if (!!im_resourceState && !im_resourceState.isEmpty()) {
+        im_newState = im_newState.setIn([populateKey], new Map())
+        im_resourceState.forEach((im_resources, resourceName) => {
+            im_newState = im_newState.setIn([populateKey, ":"+resourceName+":", resourceName], im_resources);
+        });
       }
-      else {
-        im_newState = im_newState.mergeIn([populateKey], new Map({
-          totalCount: 0,
-          ids: new Map()
-        }));
-        return im_newState;
-      }
+
+
+      // if (!im_resourceState.isEmpty()) {
+      //   im_newState = im_newState.mergeIn([populateKey], new Map({
+      //     totalCount: im_resourceState.size,
+      //     ids: im_resourceState
+      //   }));
+      //   return im_newState;
+      // }
+      // else {
+      //   im_newState = im_newState.mergeIn([populateKey], new Map({
+      //     totalCount: 0,
+      //     ids: new Map()
+      //   }));
+      //   return im_newState;
+      // }
+
+      break;
+
+    }
+
+    case TYPE_RESET_STATE: {
+      im_newState = im_newState.clear();
+      return im_newState;
     }
 
     default:

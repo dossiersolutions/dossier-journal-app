@@ -1,7 +1,9 @@
-import {UPDATE_CHANNELS, UPDATE_LAST_MESSAGE, UPDATE_USER, LOAD_MESSAGES, USER_AUTHENTIFICATION, GET_ALL_USERS, GET_ALL_EMOJI, updateResources, updateResourcesWithIds} from "./populateActions";
+import {TYPE_UPDATE_CHANNELS, TYPE_UPDATE_LAST_MESSAGE, TYPE_UPDATE_USER, TYPE_LOAD_MESSAGES, TYPE_USER_AUTHENTIFICATION, TYPE_GET_ALL_USERS, TYPE_GET_ALL_EMOJI, TYPE_RESET_STATE, updateResources, updateResourcesWithIds} from "./populateActions";
 import {fromJS, List} from "immutable";
-import {LOAD_ALL_LAST_MESSAGES, LOAD_ALL_USERS, CHANNEL_MESSAGES, USER_AUTH, ALL_USERS, EMOJI} from "./constants";
-
+import {
+  KEY_UPDATE_LAST_MESSAGE, KEY_GET_ALL_USERS, KEY_LOAD_MESSAGES, KEY_USER_AUTHENTIFICATION, KEY_UPDATE_USER,
+  KEY_GET_ALL_EMOJI, KEY_RESET_STATE, KEY_UPDATE_CHANNELS
+} from "./constants";
 const {WebClient} = require('@slack/client');
 const web = new WebClient();
 
@@ -19,7 +21,7 @@ function getIndexPage(){
 }
 
 
-export function doFetchJournalChannels(populateKey) {
+export function doFetchJournalChannels() {
 
   web.token = getToken();
 
@@ -42,7 +44,7 @@ export function doFetchJournalChannels(populateKey) {
           });
 
           // dispatch results for taken list of journal channels
-          dispatch(updateResources(filteredResults, populateKey, UPDATE_CHANNELS));
+          dispatch(updateResources(filteredResults, KEY_UPDATE_CHANNELS, TYPE_UPDATE_CHANNELS));
 
           im_result.forEach((res) => {
             if (res.get("name").includes("journal")) {
@@ -51,7 +53,7 @@ export function doFetchJournalChannels(populateKey) {
               const channel = {channel: res.get("id")}
               web.channels.history(channel)
                   .then((result) => {
-                    dispatch(updateResourcesWithIds(result, LOAD_ALL_LAST_MESSAGES, UPDATE_LAST_MESSAGE, res.get("id")));
+                    dispatch(updateResourcesWithIds(result, KEY_UPDATE_LAST_MESSAGE, TYPE_UPDATE_LAST_MESSAGE, res.get("id")));
 
                   })
                   .catch(console.error);
@@ -60,7 +62,7 @@ export function doFetchJournalChannels(populateKey) {
               const user = {user: res.get("creator")}
               web.users.info(user)
                   .then((result) => {
-                    dispatch(updateResources(result, LOAD_ALL_USERS, UPDATE_USER));
+                    dispatch(updateResources(result, KEY_UPDATE_USER, TYPE_UPDATE_USER));
 
                   })
                   .catch(console.error);
@@ -84,7 +86,7 @@ export function doFetchJournalById(channelId) {
     web.channels.history(channel)
         .then((result) => {
 
-          dispatch(updateResourcesWithIds(result, CHANNEL_MESSAGES, LOAD_MESSAGES, channelId));
+          dispatch(updateResourcesWithIds(result, KEY_LOAD_MESSAGES, TYPE_LOAD_MESSAGES, channelId));
 
         })
         .catch(console.error);
@@ -100,7 +102,7 @@ export function doFetchAllUsers() {
     web.users.list()
         .then((result) => {
 
-          dispatch(updateResources(result, ALL_USERS, GET_ALL_USERS));
+          dispatch(updateResources(result, KEY_GET_ALL_USERS, TYPE_GET_ALL_USERS));
 
         })
         .catch(console.error);
@@ -116,7 +118,7 @@ export function getEmoji() {
     web.emoji.list()
         .then((result) => {
 
-          dispatch(updateResources(result, EMOJI, GET_ALL_EMOJI));
+          dispatch(updateResources(result, KEY_GET_ALL_EMOJI, TYPE_GET_ALL_EMOJI));
 
         })
         .catch(console.error);
@@ -134,15 +136,23 @@ export function doCheckToken() {
     web.auth.test(token)
         .then((result) => {
 
-          dispatch(updateResources(result, USER_AUTH, USER_AUTHENTIFICATION));
+          dispatch(updateResources(result, KEY_USER_AUTHENTIFICATION, TYPE_USER_AUTHENTIFICATION));
 
         })
         .catch(function (err) {
           if(err){
             const res = {"ok":false}
-            dispatch(updateResources(res, USER_AUTH, USER_AUTHENTIFICATION));
+            dispatch(updateResources(res, KEY_USER_AUTHENTIFICATION, TYPE_USER_AUTHENTIFICATION));
           }
         })
+  }
+}
+
+
+export function doResetState() {
+
+  return (dispatch) => {
+          dispatch(updateResources(null, KEY_RESET_STATE, TYPE_RESET_STATE));
   }
 }
 
