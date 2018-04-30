@@ -109,22 +109,6 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
         });
       }
 
-
-      // if (!im_resourceState.isEmpty()) {
-      //   im_newState = im_newState.mergeIn([populateKey], new Map({
-      //     totalCount: im_resourceState.size,
-      //     ids: im_resourceState
-      //   }));
-      //   return im_newState;
-      // }
-      // else {
-      //   im_newState = im_newState.mergeIn([populateKey], new Map({
-      //     totalCount: 0,
-      //     ids: new Map()
-      //   }));
-      //   return im_newState;
-      // }
-
       break;
 
     }

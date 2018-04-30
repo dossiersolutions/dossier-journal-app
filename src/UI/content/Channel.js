@@ -9,6 +9,8 @@ import logo from "../../media/images/dossier-logo.jpg";
 import UserMessage from "../components/UserMessage";
 import Footer from "../components/Footer";
 import {messageNormalized} from "../../core/utils/formatingUtils";
+import parser from "html-react-parser";
+import {emojiInitialize} from "../.././core/utils/formatingUtils"
 
 const INPUT_DEBOUNCE_MILLISECONDS = 180000;
 
@@ -38,6 +40,11 @@ class Channel extends Component {
       getEmoji
     } = this.props;
 
+    const {
+      emoji
+    } = this.state;
+
+    this.setState({emoji: emojiInitialize()})
     this.setState({
       timerId: setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
     });
@@ -66,6 +73,7 @@ class Channel extends Component {
     clearInterval(this.state.timerId);
   }
 
+
   fetchUserChannelTitle(){
     const {
       channel,
@@ -86,36 +94,6 @@ class Channel extends Component {
 
   setEmoji(text){
 
-    const {
-      populateEmoji,
-      im_resourcesEmoji,
-      im_resourcesUsers
-    } = this.props;
-
-    const link = "https://dossiersolutions.slack.com/emoji/bowtie/46ec6f2bb0.png";
-
-    console.log(JSON.stringify(im_resourcesEmoji, null, 2))
-    text = text.split(" ");
-
-      // console.log("SIZE "+im_resourcesEmoji.has("au2"));
-      // if(text.includes(":"+"au2"+":")){
-      //   alert("MSG")
-      //   text = text+"_____-_____________"
-      //   console.log(text)
-      // }
-
-
-    for (var i = 0; i < text.length; i++) {
-      if(im_resourcesEmoji.has(":"+text[i]+":")){
-        console.log(text[i]);
-        const link = im_resourcesEmoji.getIn([":"+text[i]+":", text[i]]);
-        console.log(link);
-        text[i] = <span key={i}><img width="20px" className="rounded" src={link} alt="user_photo"/> </span>;
-      }else{
-        text[i] = <span key={i}>{text[i]+" "}</span>;
-      }
-    }
-    return text;
   }
 
   makeJsx() {
@@ -123,6 +101,10 @@ class Channel extends Component {
       im_resourceMessages,
       im_resourcesUsers
     } = this.props;
+
+    const {
+      emoji
+    } = this.state;
 
     const jsxData = [];
 
@@ -133,13 +115,13 @@ class Channel extends Component {
 
       const userPhoto = this.fetchUserPhoto(im_data.get("user"));
 
-      const message1 = messageNormalized(im_data.get("text"), im_resourcesUsers);
-      // console.log(message1);
-      // const message = this.setEmoji(message1);
+      const message = messageNormalized(im_data.get("text"), im_resourcesUsers);
+
+      const messageHtmlToReact = parser(emoji.replace_colons(message));
 
       jsxData.push(
               // const userPhoto = this.findUserPhoto();
-          <UserMessage key={index} message={message1} userPhoto={userPhoto}>
+          <UserMessage key={index} message={messageHtmlToReact} userPhoto={userPhoto}>
             <img width="120px" className="rounded" style={this.img} src={logo} alt="user_photo"/>
           </UserMessage>
       )

@@ -23,6 +23,9 @@ import Footer from "../components/Footer";
 import UserProfile from "../components/UserProfile";
 import {dateSelector} from "../../core/utils/dateUtils";
 import {sortByDate} from "../../core/utils/formatingUtils";
+import {messageNormalized} from "../../core/utils/formatingUtils";
+import parser from "html-react-parser";
+import {emojiInitialize} from "../.././core/utils/formatingUtils"
 
 const INPUT_DEBOUNCE_MILLISECONDS = 300000;
 
@@ -51,6 +54,11 @@ class Home extends Component {
       doResetState
     } = this.props;
 
+    const {
+      emoji
+    } = this.state;
+
+    this.setState({emoji: emojiInitialize()})
     this.setState({
       timerId: setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
     });
@@ -96,8 +104,13 @@ class Home extends Component {
 
   makeProfiles() {
     const {
-      im_resourceData
+      im_resourceData,
+      im_resourcesUsers
     } = this.props;
+
+    const {
+      emoji
+    } = this.state;
 
     const jsxProfiles = [];
     const jsxLayout = [];
@@ -111,11 +124,17 @@ class Home extends Component {
       const customDate = date.customFormat("#DDDD#, #DD# #MMMM# #YYYY#");
       const customTime = date.customFormat("#hh#:#mm# #AMPM#");
 
+      const latestMessage = im_data.getIn(["latest_message", "text"]);
+
+      const message = messageNormalized(latestMessage, im_resourcesUsers);
+
+      const messageHtmlToReact = emoji.replace_colons(message);
+
       jsxProfiles.push(
           <UserProfile
               key={im_data.get("id")}
               profile_image={im_data.get("profile").get("photo")}
-              latest_message={im_data.getIn(["latest_message", "text"])}
+              latest_message={messageHtmlToReact}
               full_name={im_data.get("profile").get("displayName")}
               name={im_data.get("name")}
               clickHandler={() => this.onClickHandler(im_data.get("id"))}
