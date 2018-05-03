@@ -6,16 +6,16 @@ import LoginForm from ".././forms/LoginForm";
 
 class Home extends Component {
 
-  errorMessage={
+  errorMessage = {
     color: "red",
     textAlign: "center"
-  }
+  };
 
-  col_md_12 ={
+  col_md_12 = {
     alignItems: "center",
     textAlign: "center",
     color: "red"
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -58,7 +58,7 @@ class Home extends Component {
       sessionStorage.setItem("token", inputValue);
       doCheckToken();
     }
-  }
+  };
 
   updateValue(event) {
     this.setState({inputValue: event.target.value})
@@ -77,13 +77,14 @@ class Home extends Component {
         value={this.state.inputValue}
     />);
 
-    if(userAuth === true){
+    if (userAuth === true) {
       this.nextPath()
-    }else if(userAuth === false){
+    }
+    else if (userAuth === false) {
       formJsx.push(
-              <div key={"errorMsg"} className="page-header" style={this.col_md_12}>
-                <small>Wrong token!</small>
-              </div>
+          <div key={"errorMsg"} className="page-header" style={this.col_md_12}>
+            <small>Wrong token!</small>
+          </div>
       )
     }
 
@@ -95,6 +96,7 @@ class Home extends Component {
   }
 
 }
+
 const mapStateToProps = state => {
 
   const userAuth = state.populateReducer.get("authentificated");

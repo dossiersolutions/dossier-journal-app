@@ -6,15 +6,15 @@ class LoginForm extends Component {
 
   col_md_12 ={
     display: "flex",
-    alignItems: "center",
     textAlign: "center",
-    marginBottom: "15px"
-  }
+    alignItems: "center",
+    marginBottom: "15px",
+  };
 
   rounded = {
     marginTop: "10px",
     marginBottom:"10px"
-  }
+  };
 
   render() {
     const {
@@ -36,13 +36,13 @@ class LoginForm extends Component {
             </div>
           </div>
 
-          <div className="col-md-12" style={this.col_md_12}>
+          <div className="col-md-12">
+            <div className="row">
             <div className="col-md-3" >
             </div>
 
-            <div className="col-md-6" >
+            <div className="col-md-6">
               <div className="input-group">
-
                 <input
                     type="text"
                     className="form-control"
@@ -59,6 +59,7 @@ class LoginForm extends Component {
                       >Go!</button>
                 </span>
               </div>
+            </div>
             </div>
 
             <div className="col-md-3" >

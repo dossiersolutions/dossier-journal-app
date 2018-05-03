@@ -1,29 +1,29 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import LinesEllipsis from 'react-lines-ellipsis'
+import MyTextBox from "./EllipsizerTextBox"
 
 class UserBox extends Component {
 
-  col_md_6 ={
+  col_md_6 = {
     padding: "0px"
-  }
+  };
 
-  jumbotron ={
+  jumbotron = {
     padding: "5px",
     margin: "5px",
     border: "1px solid #dfe0e1",
     background: "#fafbfc"
-  }
+  };
 
   img = {
     marginTop: "10px"
-  }
+  };
 
   row = {
     marginLeft: "0px",
     marginTop: "10px",
     minHeight: "100px"
-  }
+  };
 
   render() {
     const {
@@ -37,33 +37,28 @@ class UserBox extends Component {
     } = this.props;
 
     return (
-          <div className="col-md-6" style={this.col_md_6} onClick={clickHandler}>
-            <div className="jumbotron" style={this.jumbotron}>
-              <div className="container">
-                <div className="row">
-                  <div className="col-md-6">
-                    <img width="120px" className="rounded" style={this.img} src={profile_image} alt="user_photo"/>
-                  </div>
-                  <div className="col-md-6">
-                    <h5>{name}</h5>
-                    <h6>{full_name}</h6>
-                    <small><span><b>{date}</b></span></small>
-                  </div>
+        <div className="col-md-6" style={this.col_md_6} onClick={clickHandler}>
+          <div className="jumbotron" style={this.jumbotron}>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-6">
+                  <img width="120px" className="rounded" style={this.img} src={profile_image} alt="user_photo"/>
                 </div>
-
-                <div style={this.row}>
-                  <small>{time}</small>
-                  <LinesEllipsis
-                      text={latest_message}
-                      maxLine="3"
-                      ellipsis="..."
-                      trimRight
-                  />
+                <div className="col-md-6">
+                  <h5>{name}</h5>
+                  <h6>{full_name}</h6>
+                  <small><span><b>{date}</b></span></small>
                 </div>
-
               </div>
+
+              <div style={this.row}>
+                <small>{time}</small>
+                <MyTextBox text={latest_message}/>
+              </div>
+
             </div>
           </div>
+        </div>
     );
   }
 }
@@ -75,6 +70,5 @@ UserBox.propTypes = {
   full_name: PropTypes.string,
   date: PropTypes.string
 };
-
 
 export default UserBox;

@@ -9,16 +9,16 @@ class JournalHeaderLoading extends Component {
     display: "flex",
     alignItems: "center",
     textAlign: "center"
-  }
+  };
 
   img = {
     width: "90px"
-  }
+  };
 
   rounded = {
     marginTop: "10px",
     marginBottom:"10px"
-  }
+  };
 
   render() {
     return (

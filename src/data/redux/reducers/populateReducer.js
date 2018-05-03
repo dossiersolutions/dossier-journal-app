@@ -23,22 +23,22 @@ const populateReducer = (state = new Map(), action = {}) => {
 
       //Update the meta state with resource type and IDs returned from RestApi
       const im_result = fromJS(action.payload);
-        if (List.isList(im_result)) {
-          if (im_result.size > 0) {
-            return state.mergeIn([populateKey], new Map({
-              totalCount: im_result.size,
-              ids: im_result.map((im_results) => {
-                return im_results.get("id");
-              })
-            }));
-          }
-          else {
-            return state.mergeIn([populateKey], new Map({
-              totalCount: 0,
-              ids: new List()
-            }));
-          }
+      if (List.isList(im_result)) {
+        if (im_result.size > 0) {
+          return state.mergeIn([populateKey], new Map({
+            totalCount: im_result.size,
+            ids: im_result.map((im_results) => {
+              return im_results.get("id");
+            })
+          }));
         }
+        else {
+          return state.mergeIn([populateKey], new Map({
+            totalCount: 0,
+            ids: new List()
+          }));
+        }
+      }
       break;
     }
 
@@ -49,25 +49,25 @@ const populateReducer = (state = new Map(), action = {}) => {
       }
 
       const im_result = fromJS(action.payload.messages);
-        const im_channelId = im_result.get(0);
+      const im_channelId = im_result.get(0);
 
-        if (!state.getIn([populateKey])) {
-          state = state.mergeIn([populateKey], new Map({
-            messages: new List()
-          }));
-          let list = [];
-          list.push(im_channelId)
-          state = state.mergeIn([populateKey, "messages"], list);
-          return state;
+      if (!state.getIn([populateKey])) {
+        state = state.mergeIn([populateKey], new Map({
+          messages: new List()
+        }));
+        let list = [];
+        list.push(im_channelId);
+        state = state.mergeIn([populateKey, "messages"], list);
+        return state;
+      }
+      else {
+        let list = state.getIn([populateKey, "messages"]);
+        if (!list.includes(im_channelId)) {
+          list = list.push(im_channelId)
         }
-        else {
-          let list = state.getIn([populateKey, "messages"])
-          if (!list.includes(im_channelId)) {
-            list = list.push(im_channelId)
-          }
-          state = state.mergeIn([populateKey, "messages"], list);
-          return state;
-        }
+        state = state.mergeIn([populateKey, "messages"], list);
+        return state;
+      }
     }
 
     case TYPE_UPDATE_USER: {
@@ -84,12 +84,12 @@ const populateReducer = (state = new Map(), action = {}) => {
           users: new List()
         }));
         let list = [];
-        list.push(im_userId)
+        list.push(im_userId);
         state = state.mergeIn([populateKey, "users"], list);
         return state;
       }
       else {
-        let list = state.getIn([populateKey, "users"])
+        let list = state.getIn([populateKey, "users"]);
         if (!list.includes(im_userId)) {
           list = list.push(im_userId)
         }
@@ -109,7 +109,7 @@ const populateReducer = (state = new Map(), action = {}) => {
       const channelId = action.channelId;
       if (List.isList(im_result)) {
         if (im_result.size > 0) {
-          return state.mergeIn([populateKey+"_"+channelId], new Map({
+          return state.mergeIn([populateKey + "_" + channelId], new Map({
             totalCount: im_result.size,
             ids: im_result.map((im_results) => {
               return im_results.get("ts");
@@ -117,7 +117,7 @@ const populateReducer = (state = new Map(), action = {}) => {
           }));
         }
         else {
-          return state.mergeIn([populateKey+"_"+channelId], new Map({
+          return state.mergeIn([populateKey + "_" + channelId], new Map({
             totalCount: 0,
             ids: new List()
           }));
@@ -195,6 +195,6 @@ const populateReducer = (state = new Map(), action = {}) => {
       return state;
   }
 
-}
+};
 
 export default populateReducer;

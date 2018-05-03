@@ -17,14 +17,14 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
   switch (action.type) {
     case TYPE_UPDATE_CHANNELS: {
       const im_resourceState = fromJS(action.payload);
-        if (!!im_resourceState && !im_resourceState.isEmpty()) {
-          im_newState = im_newState.setIn([populateKey], new List())
-          im_resourceState.forEach((im_resources, resourceName) => {
-            im_resources.forEach((im_resource, resourceId) => {
-              im_newState = im_newState.setIn([populateKey, resourceName, resourceId], im_resource);
-            });
+      if (!!im_resourceState && !im_resourceState.isEmpty()) {
+        im_newState = im_newState.setIn([populateKey], new List());
+        im_resourceState.forEach((im_resources, resourceName) => {
+          im_resources.forEach((im_resource, resourceId) => {
+            im_newState = im_newState.setIn([populateKey, resourceName, resourceId], im_resource);
           });
-        }
+        });
+      }
 
       break;
     }
@@ -36,14 +36,14 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
         const index = im_newState.get("loadAllChannels").findIndex(item => item.get("id") === action.channelId);
 
         let msg = null;
-        for(let i = 0; i< im_lastMessage.size; i++){
-          if(!im_lastMessage.get(i).get("subtype")){
+        for (let i = 0; i < im_lastMessage.size; i++) {
+          if (!im_lastMessage.get(i).get("subtype")) {
             msg = im_lastMessage.get(i);
             break;
           }
         }
 
-        const latest_message = {latest_message : msg};
+        const latest_message = {latest_message: msg};
 
         im_newState = im_newState.mergeIn(["loadAllChannels", index], latest_message)
       }
@@ -74,10 +74,10 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
       const im_resourceState = fromJS(action.payload.messages);
       const channelId = action.channelId;
       if (!!im_resourceState && !im_resourceState.isEmpty()) {
-        im_newState = im_newState.setIn([populateKey], new List())
+        im_newState = im_newState.setIn([populateKey], new List());
         im_resourceState.forEach((im_resources, resourceName) => {
           im_resources.forEach((im_resource, resourceId) => {
-            im_newState = im_newState.setIn([populateKey+"_"+channelId, resourceName, resourceId], im_resource);
+            im_newState = im_newState.setIn([populateKey + "_" + channelId, resourceName, resourceId], im_resource);
           });
         });
       }
@@ -88,7 +88,7 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
     case TYPE_GET_ALL_USERS: {
       const im_resourceState = fromJS(action.payload.members);
       if (!!im_resourceState && !im_resourceState.isEmpty()) {
-        im_newState = im_newState.setIn([populateKey], new Map())
+        im_newState = im_newState.setIn([populateKey], new Map());
         im_resourceState.forEach((im_resources, resourceName) => {
           im_resources.forEach((im_resource, resourceId) => {
             im_newState = im_newState.setIn([populateKey, im_resources.get("id"), resourceId], im_resource);
@@ -103,9 +103,9 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
 
       const im_resourceState = fromJS(action.payload.emoji);
       if (!!im_resourceState && !im_resourceState.isEmpty()) {
-        im_newState = im_newState.setIn([populateKey], new Map())
+        im_newState = im_newState.setIn([populateKey], new Map());
         im_resourceState.forEach((im_resources, resourceName) => {
-            im_newState = im_newState.setIn([populateKey, ":"+resourceName+":", resourceName], im_resources);
+          im_newState = im_newState.setIn([populateKey, ":" + resourceName + ":", resourceName], im_resources);
         });
       }
 
@@ -126,6 +126,6 @@ const resourceReducer = (im_state = new Map(), action = {}) => {
     return !!resource && !(Iterable.isIterable(resource) && resource.isEmpty());
   });
 
-}
+};
 
 export default resourceReducer;

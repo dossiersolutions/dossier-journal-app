@@ -22,10 +22,7 @@ import Footer from "../components/Footer";
 
 import UserProfile from "../components/UserProfile";
 import {dateSelector} from "../../core/utils/dateUtils";
-import {sortByDate} from "../../core/utils/formatingUtils";
-import {messageNormalized} from "../../core/utils/formatingUtils";
-import parser from "html-react-parser";
-import {emojiInitialize} from "../.././core/utils/formatingUtils"
+import {messageNormalized, sortByDate} from "../../core/utils/formatingUtils";
 
 const INPUT_DEBOUNCE_MILLISECONDS = 300000;
 
@@ -34,7 +31,7 @@ class Home extends Component {
   deck_style = {
     paddingLeft: "10px",
     paddingRight: "10px"
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -42,7 +39,7 @@ class Home extends Component {
     this.state = {
       timerId: null
     }
-  }
+  };
 
   componentWillMount() {
     const {
@@ -54,17 +51,11 @@ class Home extends Component {
       doResetState
     } = this.props;
 
-    const {
-      emoji
-    } = this.state;
-
-    this.setState({emoji: emojiInitialize()})
     this.setState({
       timerId: setInterval(() => this.doDataUpdate(this.props.channel), INPUT_DEBOUNCE_MILLISECONDS)
     });
 
-
-    if(!populateData || !populateAllEmoji){
+    if (!populateData || !populateAllEmoji) {
       doResetState();
       doFetchJournalChannels();
       doFetchAllUsers();
@@ -108,13 +99,9 @@ class Home extends Component {
       im_resourcesUsers
     } = this.props;
 
-    const {
-      emoji
-    } = this.state;
-
     const jsxProfiles = [];
     const jsxLayout = [];
-    jsxLayout.push(<Header key={"header"}/>)
+    jsxLayout.push(<Header key={"header"}/>);
     const sortedByMessage = sortByDate(im_resourceData);
     sortedByMessage.forEach((im_data) => {
 
@@ -128,13 +115,11 @@ class Home extends Component {
 
       const message = messageNormalized(latestMessage, im_resourcesUsers);
 
-      const messageHtmlToReact = emoji.replace_colons(message);
-
       jsxProfiles.push(
           <UserProfile
               key={im_data.get("id")}
               profile_image={im_data.get("profile").get("photo")}
-              latest_message={messageHtmlToReact}
+              latest_message={message}
               full_name={im_data.get("profile").get("displayName")}
               name={im_data.get("name")}
               clickHandler={() => this.onClickHandler(im_data.get("id"))}
@@ -145,9 +130,9 @@ class Home extends Component {
 
     });
 
-    const dat = (<CardDeck style={this.deck_style} key={"cardDeck"}>{jsxProfiles}</CardDeck>)
+    const dat = (<CardDeck style={this.deck_style} key={"cardDeck"}>{jsxProfiles}</CardDeck>);
     jsxLayout.push(dat);
-    jsxLayout.push(<Footer key={"footer"}/>)
+    jsxLayout.push(<Footer key={"footer"}/>);
 
     return jsxLayout;
 

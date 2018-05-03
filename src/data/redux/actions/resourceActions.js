@@ -50,7 +50,7 @@ export function doFetchJournalChannels() {
             if (res.get("name").includes("journal")) {
 
               // populate last messages from channels
-              const channel = {channel: res.get("id")}
+              const channel = {channel: res.get("id")};
               web.channels.history(channel)
                   .then((result) => {
                     dispatch(updateResourcesWithIds(result, KEY_UPDATE_LAST_MESSAGE, TYPE_UPDATE_LAST_MESSAGE, res.get("id")));
@@ -59,7 +59,7 @@ export function doFetchJournalChannels() {
                   .catch(console.error);
 
               // populate channels/user from all journal channels
-              const user = {user: res.get("creator")}
+              const user = {user: res.get("creator")};
               web.users.info(user)
                   .then((result) => {
                     dispatch(updateResources(result, KEY_UPDATE_USER, TYPE_UPDATE_USER));
@@ -81,7 +81,7 @@ export function doFetchJournalById(channelId) {
 
   return (dispatch) => {
 
-    const channel = {channel: channelId}
+    const channel = {channel: channelId};
 
     web.channels.history(channel)
         .then((result) => {
@@ -131,7 +131,7 @@ export function doCheckToken() {
 
   return (dispatch) => {
 
-    const token = {token:  window.sessionStorage.getItem("token")}
+    const token = {token:  window.sessionStorage.getItem("token")};
 
     web.auth.test(token)
         .then((result) => {
@@ -141,7 +141,7 @@ export function doCheckToken() {
         })
         .catch(function (err) {
           if(err){
-            const res = {"ok":false}
+            const res = {"ok":false};
             dispatch(updateResources(res, KEY_USER_AUTHENTIFICATION, TYPE_USER_AUTHENTIFICATION));
           }
         })

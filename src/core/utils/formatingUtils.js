@@ -1,11 +1,10 @@
 import Immutable from "immutable";
 import React from 'react';
 import EmojiConvertor from "emoji-js";
-import parser from "html-react-parser";
 
-export function sortByDate(resourceData){
+export function sortByDate(resourceData) {
   const dataCopy = resourceData.toJS();
-  dataCopy.sort(function(a, b){
+  dataCopy.sort(function (a, b) {
     const first = a.latest_message.ts;
     const second = b.latest_message.ts;
     return second - first;
@@ -15,33 +14,33 @@ export function sortByDate(resourceData){
   return convert;
 }
 
-function breakLineRefactor(text){
+function breakLineRefactor(text) {
   var str = text.replace(/(?:\r\n|\r|\n)/g, '<br>');
   return str;
 }
 
-export function messageNormalized(text, resources){
-  text = text.replace(/\*/g,'');
+export function messageNormalized(text, resources) {
+  text = text.replace(/\*/g, '');
 
   // Map users by tagName
   let userIndex = text.indexOf("<@");
-  if(userIndex !== -1){
-    while (userIndex > -1){
-      const wordPatch = text.substring(userIndex, userIndex+12);
-      const wordUserID = text.substring(userIndex+2, userIndex+11);
+  if (userIndex !== -1) {
+    while (userIndex > -1) {
+      const wordPatch = text.substring(userIndex, userIndex + 12);
+      const wordUserID = text.substring(userIndex + 2, userIndex + 11);
       const wordNormalized = fetchUserTag(wordUserID, resources);
-      text = text.replace(wordPatch, wordNormalized)
-      userIndex = text.indexOf("<@", userIndex+12);
+      text = text.replace(wordPatch, wordNormalized);
+      userIndex = text.indexOf("<@", userIndex + 12);
     }
   }
 
   //Map files by file name
   let fileIndex = text.indexOf("<#");
-  if(fileIndex !== -1){
-    while (fileIndex > -1){
-      const wordPatch = text.substring(fileIndex, fileIndex+11);
-      text = text.replace(wordPatch, "FILE...")
-      fileIndex = text.indexOf("<#", fileIndex+12);
+  if (fileIndex !== -1) {
+    while (fileIndex > -1) {
+      const wordPatch = text.substring(fileIndex, fileIndex + 11);
+      text = text.replace(wordPatch, "FILE...");
+      fileIndex = text.indexOf("<#", fileIndex + 12);
     }
   }
 
@@ -51,7 +50,7 @@ export function messageNormalized(text, resources){
   return text;
 }
 
-export function emojiInitialize(){
+export function emojiInitialize() {
   const emoji = new EmojiConvertor();
 
   emoji.text_mode = false;
@@ -71,6 +70,6 @@ export function emojiInitialize(){
   return emoji;
 }
 
-export function fetchUserTag(user, resources){
+export function fetchUserTag(user, resources) {
   return resources.getIn([user, "profile", "real_name_normalized"]);
 }
