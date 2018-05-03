@@ -61,8 +61,8 @@ class UserMessage extends Component {
                     <div className={"row"} style={this.marginBottom}>
                       <small>{date} | {time}</small>
                     </div>
-                    <div className={"row"}>
-                      <h6>{message}</h6>
+                    <div className={"row"} style={this.marginBottom}>
+                      {message}
                     </div>
                   </div>
                 </div>

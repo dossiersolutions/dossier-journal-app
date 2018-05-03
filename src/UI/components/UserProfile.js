@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import MyTextBox from "./EllipsizerTextBox"
+import EllipsizerTextBox from "./EllipsizerTextBox"
 
 class UserBox extends Component {
 
@@ -53,7 +53,7 @@ class UserBox extends Component {
 
               <div style={this.row}>
                 <small>{time}</small>
-                <MyTextBox text={latest_message}/>
+                <EllipsizerTextBox text={latest_message}/>
               </div>
 
             </div>
