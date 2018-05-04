@@ -44,9 +44,9 @@ export function messageNormalized(text, resources) {
     }
   }
 
-  // if(text.includes("\n")){
-  //   text = breakLineRefactor(text);
-  // }
+  if(text.includes("\n")){
+    text = breakLineRefactor(text);
+  }
   return text;
 }
 
