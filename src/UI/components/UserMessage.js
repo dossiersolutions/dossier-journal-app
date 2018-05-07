@@ -25,16 +25,27 @@ class UserMessage extends Component {
   };
 
   img = {
+    width: "55px",
     marginTop: "5px",
     marginLeft: "5px",
     marginBottom: "5px",
     padding: "0px"
   };
 
+  fileInner={
+    width: "50%",
+    marginBottom: "5px",
+    marginTop: "5px"
+  }
+
   row = {
     marginLeft: "0px",
     marginTop: "10px"
   };
+
+  handleImageClick(imgUrl){
+    window.open(imgUrl, "_blank");
+  }
 
   render() {
     const {
@@ -42,8 +53,17 @@ class UserMessage extends Component {
       userPhoto,
       userName,
       date,
-      time
+      time,
+      file
     } = this.props;
+
+    let fileJsx = null;
+
+    if(file && file.includes(".pdf")){
+      fileJsx = <a href={file} target="_blank">PDF File</a>;
+    }else{
+      fileJsx = <img style={this.fileInner} src={file} onClick={() => this.handleImageClick(file)}/>;
+    }
 
     return (
         <div className="UserMessage">
@@ -52,7 +72,7 @@ class UserMessage extends Component {
               <div className="container">
                 <div className="row">
                   <div className="col-md-1" style={this.col_md_1}>
-                    <img width="55px" className="rounded" style={this.img} src={userPhoto} alt="user_photo"/>
+                    <img className="rounded" style={this.img} src={userPhoto} alt="user_photo"/>
                   </div>
                   <div className="col-md-11">
                     <div className={"row"}>
@@ -60,6 +80,9 @@ class UserMessage extends Component {
                     </div>
                     <div className={"row"} style={this.marginBottom}>
                       <small>{date} | {time}</small>
+                    </div>
+                    <div>
+                      {file ? fileJsx : null}
                     </div>
                     <div className={"row"} style={this.marginBottom}>
                       {message}
@@ -80,7 +103,8 @@ UserBox.propTypes = {
   userPhoto: PropTypes.string,
   userName: PropTypes.string,
   date: PropTypes.string,
-  time: PropTypes.string
+  time: PropTypes.string,
+  file: PropTypes.string
 };
 
 export default UserMessage;

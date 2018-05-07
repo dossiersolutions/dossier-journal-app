@@ -131,11 +131,32 @@ class Channel extends Component {
     jsxData.push(<Header key={"header"} headerTitle={userJournalName}/>);
     im_resourceMessages.forEach((im_data, index) => {
 
-      const userPhoto = this.fetchUserPhoto(im_data.get("user"));
+      // Check if message is regular user's message or comment
+      let userPhoto = this.fetchUserPhoto(im_data.get("user"));
+
+      if(!userPhoto && im_data.get("subtype") === "file_comment"){
+        userPhoto = this.fetchUserPhoto(im_data.getIn(["comment", "user"]));
+      }
 
       const userName = this.fetchUserName(im_data.get("user"));
 
       const message = messageNormalized(im_data.get("text"), im_resourcesUsers);
+
+      // Check if message has a file and provide the file or null
+      const fileCheck = im_data.get("file") ? im_data.get("file") : null;
+
+      let file = null;
+      if(fileCheck){
+        const fileName = im_data.getIn(["file", "name"]);
+        if( fileName.includes(".png") ||
+            fileName.includes(".gif") ||
+            fileName.includes(".jpg") ||
+            fileName.includes(".jpeg")||
+            fileName.includes(".pdf"))
+        {
+          file = im_data.getIn(["file", "url_private"]);
+        }
+      }
 
       const dateTimeUnix = im_data.get("ts");
       dateSelector();
@@ -154,6 +175,7 @@ class Channel extends Component {
               userName={userName}
               date={customDate}
               time={customTime}
+              file={file}
           >
             <img width="120px" className="rounded" style={this.img} src={logo} alt="user_photo"/>
           </UserMessage>

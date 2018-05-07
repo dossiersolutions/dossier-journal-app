@@ -21,6 +21,7 @@ function breakLineRefactor(text) {
 
 export function messageNormalized(text, resources) {
   text = text.replace(/\*/g, '');
+  text = breakLineRefactor(text);
 
   // Map users by tagName
   let userIndex = text.indexOf("<@");
@@ -44,9 +45,6 @@ export function messageNormalized(text, resources) {
     }
   }
 
-  if(text.includes("\n")){
-    text = breakLineRefactor(text);
-  }
   return text;
 }
 

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="16efef12-72ad-4932-b95a-21c49ad2ef44" name="Default" comment="">
+    <list default="true" id="16efef12-72ad-4932-b95a-21c49ad2ef44" name="Default" comment="commit: Files parsing (images, pdf)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/UI/components/UserMessage.js" afterPath="$PROJECT_DIR$/src/UI/components/UserMessage.js" />
+      <change beforePath="$PROJECT_DIR$/src/UI/content/Channel.js" afterPath="$PROJECT_DIR$/src/UI/content/Channel.js" />
       <change beforePath="$PROJECT_DIR$/src/core/utils/formatingUtils.js" afterPath="$PROJECT_DIR$/src/core/utils/formatingUtils.js" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -32,8 +34,18 @@
       <file leaf-file-name="EllipsizerTextBox.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/UI/components/EllipsizerTextBox.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="32" column="42" lean-forward="false" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="42" />
+            <state relative-caret-position="142">
+              <caret line="12" column="17" lean-forward="true" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Channel.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/UI/content/Channel.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="173" column="35" lean-forward="true" selection-start-line="173" selection-start-column="35" selection-end-line="173" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -42,28 +54,20 @@
       <file leaf-file-name="UserMessage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/UI/components/UserMessage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="64" column="22" lean-forward="false" selection-start-line="64" selection-start-column="22" selection-end-line="64" selection-end-column="22" />
-              <folding />
+            <state relative-caret-position="88">
+              <caret line="46" column="34" lean-forward="true" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dateUtils.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="dateUtils.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/core/utils/dateUtils.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="324">
               <caret line="41" column="16" lean-forward="false" selection-start-line="41" selection-start-column="16" selection-end-line="41" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="formatingUtils.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/core/utils/formatingUtils.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="36" column="26" lean-forward="true" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -108,6 +112,7 @@
       <find>replace</find>
       <find>elli</find>
       <find>marginBottom</find>
+      <find>emoji</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -143,17 +148,17 @@
         <option value="$PROJECT_DIR$/src/UI/placeholders/PageLoader.js" />
         <option value="$PROJECT_DIR$/src/data/redux/actions/resourceActions.js" />
         <option value="$PROJECT_DIR$/src/core/utils/dateUtils.js" />
-        <option value="$PROJECT_DIR$/src/UI/components/EllipsizerTextBox.js" />
         <option value="$PROJECT_DIR$/src/UI/components/Footer.js" />
         <option value="$PROJECT_DIR$/src/UI/components/Header.js" />
-        <option value="$PROJECT_DIR$/src/UI/content/Channel.js" />
         <option value="$PROJECT_DIR$/src/UI/content/Home.js" />
         <option value="$PROJECT_DIR$/src/UI/content/Users.js" />
         <option value="$PROJECT_DIR$/src/data/redux/reducers/populateReducer.js" />
         <option value="$PROJECT_DIR$/src/data/redux/reducers/resourceReducer.js" />
         <option value="$PROJECT_DIR$/src/UI/components/UserProfile.js" />
         <option value="$PROJECT_DIR$/src/UI/components/UserMessage.js" />
+        <option value="$PROJECT_DIR$/src/UI/components/EllipsizerTextBox.js" />
         <option value="$PROJECT_DIR$/src/core/utils/formatingUtils.js" />
+        <option value="$PROJECT_DIR$/src/UI/content/Channel.js" />
       </list>
     </option>
   </component>
@@ -189,9 +194,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
       <pane id="Scope" />
-      <pane id="Scratches" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -279,6 +283,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -420,7 +425,8 @@
       <workItem from="1524661197882" duration="6046000" />
       <workItem from="1525167179592" duration="10412000" />
       <workItem from="1525332228593" duration="888000" />
-      <workItem from="1525445564864" duration="50000" />
+      <workItem from="1525445564864" duration="88000" />
+      <workItem from="1525695155087" duration="10968000" />
     </task>
     <task id="LOCAL-00001" summary="commit: Code refactoring, routes &amp; state changes">
       <created>1524754965605</created>
@@ -450,11 +456,18 @@
       <option name="project" value="LOCAL" />
       <updated>1525332462936</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="commit: Small change text format">
+      <created>1525445639204</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1525445639204</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107183000" />
+    <option name="totallyTimeSpent" value="118189000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1985" y="-4" width="1855" height="1084" extended-state="6" />
@@ -473,7 +486,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47096774" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27418464" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27750137" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -502,7 +515,8 @@
     <MESSAGE value="commit: Emoji set up, Slack file formatting" />
     <MESSAGE value="commit: Emoji improvements, date formatting, responsive improvement of home page" />
     <MESSAGE value="commit: Small changes related to code formatting" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit: Small changes related to code formatting" />
+    <MESSAGE value="commit: Small change text format" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit: Small change text format" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -534,6 +548,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="194" column="18" lean-forward="true" selection-start-line="194" selection-start-column="18" selection-end-line="194" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -712,13 +727,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/content/Channel.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="161" column="43" lean-forward="false" selection-start-line="161" selection-start-column="43" selection-end-line="161" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/UI/content/Home.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -747,14 +755,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/components/EllipsizerTextBox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="32" column="42" lean-forward="false" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/UI/components/UserProfile.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="936">
@@ -765,10 +765,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/components/EllipsizerTextBox.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="12" column="17" lean-forward="true" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/content/Channel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="173" column="35" lean-forward="true" selection-start-line="173" selection-start-column="35" selection-end-line="173" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/UI/components/UserMessage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="64" column="22" lean-forward="false" selection-start-line="64" selection-start-column="22" selection-end-line="64" selection-end-column="22" />
+        <state relative-caret-position="88">
+          <caret line="46" column="34" lean-forward="true" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/utils/formatingUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="13" column="17" lean-forward="true" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
           <folding />
         </state>
       </provider>
@@ -777,14 +803,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="41" column="16" lean-forward="false" selection-start-line="41" selection-start-column="16" selection-end-line="41" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/utils/formatingUtils.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="36" column="26" lean-forward="true" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
           <folding />
         </state>
       </provider>
