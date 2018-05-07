@@ -110,9 +110,6 @@ class Channel extends Component {
     return im_resourcesUsers.getIn([user, "profile", "real_name"]);
   }
 
-  setEmoji(text) {
-
-  }
 
   makeJsx() {
     const {
