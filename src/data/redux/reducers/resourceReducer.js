@@ -1,5 +1,4 @@
 import {fromJS, Iterable, List, Map} from "immutable";
-import _ from "lodash";
 import {
   TYPE_GET_ALL_EMOJI,
   TYPE_GET_ALL_USERS,

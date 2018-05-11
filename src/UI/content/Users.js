@@ -85,6 +85,14 @@ class Home extends Component {
     clearInterval(this.state.timerId);
   }
 
+  fetchUserName(user) {
+    const {
+      im_resourcesUsers
+    } = this.props;
+
+    return im_resourcesUsers.getIn([user, "profile", "real_name"]);
+  }
+
   nextPath(path) {
     this.props.history.push(path);
   }
@@ -113,6 +121,8 @@ class Home extends Component {
 
       const latestMessage = im_data.getIn(["latest_message", "text"]);
 
+      const latestPostUser = this.fetchUserName(im_data.getIn(["latest_message", "user"]));
+
       const message = messageNormalized(latestMessage, im_resourcesUsers);
 
       jsxProfiles.push(
@@ -125,6 +135,7 @@ class Home extends Component {
               clickHandler={() => this.onClickHandler(im_data.get("id"))}
               date={customDate}
               time={customTime}
+              latestPostUser={latestPostUser}
           />
       )
 
@@ -188,8 +199,6 @@ const mapStateToProps = state => {
   const populateDataUsers = state.populateReducer.getIn([KEY_UPDATE_USER, "users"]);
   const populateAllUsers = state.populateReducer.get(KEY_GET_ALL_USERS);
   const populateAllEmoji = state.populateReducer.get(KEY_GET_ALL_EMOJI);
-
-  // console.log("TOATL COUNT "+JSON.stringify(populateDataMessages, null, 2))
 
   return {
     im_resourceData,

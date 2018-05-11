@@ -33,7 +33,8 @@ class UserMessage extends Component {
   };
 
   fileInner={
-    width: "50%",
+    width: "auto",
+    maxWidth: "100%",
     marginBottom: "5px",
     marginTop: "5px"
   }
@@ -42,6 +43,96 @@ class UserMessage extends Component {
     marginLeft: "0px",
     marginTop: "10px"
   };
+
+  boxStyle={
+    width: "auto",
+    maxWidth: "100%",
+    border: "1px #c7c7c7 solid",
+    padding: "10px",
+    borderRadius: "5px",
+    marginBottom: "5px"
+  }
+
+  button={
+    width: "55px",
+    height: "25px",
+    border: "1px solid #2b3179",
+    backgroundColor: "#2b3179",
+    borderRadius: "5px",
+    marginLeft: "15px",
+    textAlign: "center",
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: "13px"
+  }
+
+  createFileJsx(){
+    const {
+      file,
+      fileType
+    } = this.props;
+
+    let fileJsx = null;
+
+    switch (fileType){
+      case "GIF":
+        fileJsx = <img style={this.fileInner} src={file} onClick={() => this.handleImageClick(file)} alt={fileType}/>;
+        break;
+
+      case "PNG":
+        fileJsx = <img style={this.fileInner} src={file} onClick={() => this.handleImageClick(file)} alt={fileType}/>;
+        break;
+
+      case "JPG":
+        fileJsx = <img style={this.fileInner} src={file} onClick={() => this.handleImageClick(file)} alt={fileType}/>;
+        break;
+
+      case "JPEG":
+        fileJsx = <img style={this.fileInner} src={file} onClick={() => this.handleImageClick(file)} alt={fileType}/>;
+        break;
+
+      case "PDF":
+        fileJsx = <div style={this.boxStyle}>
+          <span><b>File:</b></span>
+          <div className="row" style={{marginLeft: "15px"}}>
+            <div>{file}</div>
+            <div>
+              <a href={file} target={"_blank"}><button style={this.button}>View</button></a>
+            </div>
+          </div>
+        </div>
+        break;
+
+      case "Plain Text":
+        fileJsx = <div style={this.boxStyle}>
+          <span><b>File:</b></span>
+          <div className="row" style={{marginLeft: "15px"}}>
+            <div>{file}</div>
+            <div>
+              <a href={file} target={"_blank"}><button style={this.button}>View</button></a>
+            </div>
+          </div>
+        </div>
+        break;
+
+      case "Java":
+        fileJsx = <div style={this.boxStyle}>
+          <span><b>File:</b></span>
+          <div className="row" style={{marginLeft: "15px"}}>
+            <div>{file}</div>
+            <div>
+              <a href={file} target={"_blank"}><button style={this.button}>View</button></a>
+            </div>
+          </div>
+        </div>
+        break;
+
+      default:
+        fileJsx = null;
+    }
+
+    return fileJsx;
+  }
 
   handleImageClick(imgUrl){
     window.open(imgUrl, "_blank");
@@ -57,13 +148,7 @@ class UserMessage extends Component {
       file
     } = this.props;
 
-    let fileJsx = null;
-
-    if(file && file.includes(".pdf")){
-      fileJsx = <a href={file} target="_blank">PDF File</a>;
-    }else{
-      fileJsx = <img style={this.fileInner} src={file} onClick={() => this.handleImageClick(file)}/>;
-    }
+    const fileJsx = this.createFileJsx();
 
     return (
         <div className="UserMessage">
@@ -81,11 +166,11 @@ class UserMessage extends Component {
                     <div className={"row"} style={this.marginBottom}>
                       <small>{date} | {time}</small>
                     </div>
-                    <div>
-                      {file ? fileJsx : null}
-                    </div>
                     <div className={"row"} style={this.marginBottom}>
                       {message}
+                    </div>
+                    <div>
+                      {file ? fileJsx : null}
                     </div>
                   </div>
                 </div>
@@ -104,7 +189,8 @@ UserBox.propTypes = {
   userName: PropTypes.string,
   date: PropTypes.string,
   time: PropTypes.string,
-  file: PropTypes.string
+  file: PropTypes.string,
+  fileType: PropTypes.string
 };
 
 export default UserMessage;

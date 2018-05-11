@@ -1,5 +1,4 @@
 import Immutable from "immutable";
-import React from 'react';
 import EmojiConvertor from "emoji-js";
 
 export function sortByDate(resourceData) {
@@ -7,6 +6,18 @@ export function sortByDate(resourceData) {
   dataCopy.sort(function (a, b) {
     const first = a.latest_message.ts;
     const second = b.latest_message.ts;
+    return second - first;
+  });
+
+  const convert = Immutable.fromJS(dataCopy);
+  return convert;
+}
+
+export function sortByDateChannelMessages(resourceData) {
+  const dataCopy = resourceData.toJS();
+  dataCopy.sort(function (a, b) {
+    const first = a.ts;
+    const second = b.ts;
     return second - first;
   });
 
@@ -70,4 +81,29 @@ export function emojiInitialize() {
 
 export function fetchUserTag(user, resources) {
   return resources.getIn([user, "profile", "real_name_normalized"]);
+}
+
+export function fetchFile(im_data){
+  let file = null;
+  const fileCheck = im_data.get("file") ? im_data.get("file") : null;
+
+  if(fileCheck){
+    const fileType = im_data.getIn(["file", "pretty_type"]);
+    if( fileType.includes("PNG") ||
+        fileType.includes("GIF") ||
+        fileType.includes("JPG") ||
+        fileType.includes("JPEG")||
+        fileType.includes("PDF") ||
+        fileType.includes("Plain Text") ||
+        fileType.includes("Java"))
+    {
+      file = im_data.getIn(["file", "url_private"]);
+    }
+  }
+  return file;
+}
+
+export function fetchFileType(im_data){
+  const fileType = im_data.getIn(["file", "pretty_type"]);
+  return fileType;
 }

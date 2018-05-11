@@ -18,9 +18,9 @@ import Header from "../components/Header";
 import logo from "../../media/images/dossier-logo.jpg";
 import UserMessage from "../components/UserMessage";
 import Footer from "../components/Footer";
-import {messageNormalized} from "../../core/utils/formatingUtils";
+import {messageNormalized, sortByDateChannelMessages} from "../../core/utils/formatingUtils";
 import parser from "html-react-parser";
-import {emojiInitialize} from "../.././core/utils/formatingUtils"
+import {emojiInitialize, fetchFile, fetchFileType} from "../.././core/utils/formatingUtils"
 import {dateSelector} from "../../core/utils/dateUtils";
 
 const INPUT_DEBOUNCE_MILLISECONDS = 180000;
@@ -51,9 +51,6 @@ class Channel extends Component {
       getEmoji
     } = this.props;
 
-    const {
-      emoji
-    } = this.state;
 
     this.setState({emoji: emojiInitialize()});
     this.setState({
@@ -126,7 +123,11 @@ class Channel extends Component {
     const userJournalName = "# " + this.fetchUserChannelTitle();
 
     jsxData.push(<Header key={"header"} headerTitle={userJournalName}/>);
-    im_resourceMessages.forEach((im_data, index) => {
+
+    const list = im_resourceMessages.toList();
+    const orderedList = sortByDateChannelMessages(list);
+
+    orderedList.forEach((im_data, index) => {
 
       // Check if message is regular user's message or comment
       let userPhoto = this.fetchUserPhoto(im_data.get("user"));
@@ -140,20 +141,9 @@ class Channel extends Component {
       const message = messageNormalized(im_data.get("text"), im_resourcesUsers);
 
       // Check if message has a file and provide the file or null
-      const fileCheck = im_data.get("file") ? im_data.get("file") : null;
-
-      let file = null;
-      if(fileCheck){
-        const fileName = im_data.getIn(["file", "name"]);
-        if( fileName.includes(".png") ||
-            fileName.includes(".gif") ||
-            fileName.includes(".jpg") ||
-            fileName.includes(".jpeg")||
-            fileName.includes(".pdf"))
-        {
-          file = im_data.getIn(["file", "url_private"]);
-        }
-      }
+      const file = fetchFile(im_data);
+      // Check file's type
+      const fileType = fetchFileType(im_data);
 
       const dateTimeUnix = im_data.get("ts");
       dateSelector();
@@ -164,7 +154,6 @@ class Channel extends Component {
       const messageHtmlToReact = parser(emoji.replace_colons(message));
 
       jsxData.push(
-          // const userPhoto = this.findUserPhoto();
           <UserMessage
               key={index}
               message={messageHtmlToReact}
@@ -173,6 +162,7 @@ class Channel extends Component {
               date={customDate}
               time={customTime}
               file={file}
+              fileType={fileType}
           >
             <img width="120px" className="rounded" style={this.img} src={logo} alt="user_photo"/>
           </UserMessage>

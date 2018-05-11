@@ -21,7 +21,6 @@ class UserBox extends Component {
 
   row = {
     marginLeft: "0px",
-    marginTop: "10px",
     minHeight: "100px"
   };
 
@@ -33,7 +32,8 @@ class UserBox extends Component {
       full_name,
       clickHandler,
       date,
-      time
+      time,
+      latestPostUser
     } = this.props;
 
     return (
@@ -51,8 +51,12 @@ class UserBox extends Component {
                 </div>
               </div>
 
-              <div style={this.row}>
+              <div>
                 <small>{time}</small>
+              </div>
+
+              <div style={this.row}>
+                <small><b>{latestPostUser}:</b></small>
                 <EllipsizerTextBox text={latest_message}/>
               </div>
 
